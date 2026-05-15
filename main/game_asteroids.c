@@ -89,11 +89,10 @@ static void asteroids_enter(void)
 
 static void split_rock(body_t *src)
 {
-    int newr;
-    float spd;
-    if (src->r == ROCK_R_BIG)     { newr = ROCK_R_MED; spd = 0.040f; }
-    else if (src->r == ROCK_R_MED){ newr = ROCK_R_SML; spd = 0.055f; }
-    else                          { return; }
+    /* Big → two mediums. Medium → nothing (mediums are the final tier). */
+    if (src->r != ROCK_R_BIG) return;
+    int   newr = ROCK_R_MED;
+    float spd  = 0.040f;
     for (int k = 0; k < 2; k++) {
         for (int i = 0; i < MAX_ROCKS; i++) {
             if (s_rocks[i].alive) continue;
@@ -219,8 +218,7 @@ static bool asteroids_update(const arcade_input_t *in)
             float rad = s_rocks[r].r + 1;
             if (dx*dx + dy*dy <= rad*rad) {
                 s_bullets[b].alive = false;
-                s_score += (s_rocks[r].r == ROCK_R_BIG) ? 20
-                          : (s_rocks[r].r == ROCK_R_MED) ? 50 : 100;
+                s_score += (s_rocks[r].r == ROCK_R_BIG) ? 25 : 75;
                 split_rock(&s_rocks[r]);
                 s_rocks[r].alive = false;
                 break;
