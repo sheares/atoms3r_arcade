@@ -1,0 +1,21 @@
+idf_component_register(
+    SRCS
+        "main.c"
+        "gc9107.c"
+        "lp5562.c"
+        "joystick2.c"
+        "maze.c"
+        "game_snake.c"
+        "game_maze.c"
+        "game_pong.c"
+        "game_breakout.c"
+        "game_asteroids.c"
+    INCLUDE_DIRS "."
+    REQUIRES
+        esp_driver_spi
+        esp_driver_gpio
+        esp_driver_i2c
+        esp_timer
+        freertos
+        log
+)
