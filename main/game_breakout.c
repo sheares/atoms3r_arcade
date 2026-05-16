@@ -57,9 +57,9 @@ static void serve_ball(void)
 {
     s_ball_x = s_paddle_x + PADDLE_W / 2.0f - BALL_SZ / 2.0f;
     s_ball_y = PADDLE_Y - BALL_SZ - 1;
-    s_ball_vx = ((rand() % 20) - 10) * 0.01f;     /* small random tilt */
-    if (s_ball_vx > -0.03f && s_ball_vx < 0.03f) s_ball_vx = 0.06f;
-    s_ball_vy = -0.10f;
+    s_ball_vx = ((rand() % 20) - 10) * 0.005f;    /* small random tilt */
+    if (s_ball_vx > -0.02f && s_ball_vx < 0.02f) s_ball_vx = 0.03f;
+    s_ball_vy = -0.050f;
     s_serving = true;
     s_serve_at_us = esp_timer_get_time() + 600000;
 }
@@ -139,15 +139,16 @@ static bool breakout_update(const arcade_input_t *in)
             s_ball_y = PADDLE_Y - BALL_SZ;
             s_ball_vy = -s_ball_vy;
             float rel = ((s_ball_x + BALL_SZ / 2.0f) - (s_paddle_x + PADDLE_W / 2.0f)) / (PADDLE_W / 2.0f);
-            s_ball_vx += rel * 0.06f;
+            s_ball_vx += rel * 0.03f;
         }
         /* Bricks. */
         brick_collide();
 
-        if (s_ball_vx >  0.18f) s_ball_vx =  0.18f;
-        if (s_ball_vx < -0.18f) s_ball_vx = -0.18f;
-        if (s_ball_vy >  0.18f) s_ball_vy =  0.18f;
-        if (s_ball_vy < -0.18f) s_ball_vy = -0.18f;
+        /* Speed cap — halved. */
+        if (s_ball_vx >  0.09f) s_ball_vx =  0.09f;
+        if (s_ball_vx < -0.09f) s_ball_vx = -0.09f;
+        if (s_ball_vy >  0.09f) s_ball_vy =  0.09f;
+        if (s_ball_vy < -0.09f) s_ball_vy = -0.09f;
 
         if (s_ball_y > LCD_HEIGHT) {
             s_lives--;

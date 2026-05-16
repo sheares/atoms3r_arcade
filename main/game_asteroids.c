@@ -84,7 +84,7 @@ static void asteroids_enter(void)
     s_fire_ready_at_us = 0;
     for (int i = 0; i < MAX_ROCKS; i++)  s_rocks[i].alive = false;
     for (int i = 0; i < MAX_BULLETS; i++) s_bullets[i].alive = false;
-    for (int i = 0; i < 4; i++) spawn_rock(ROCK_R_BIG, 0.025f + frand() * 0.015f);
+    for (int i = 0; i < 4; i++) spawn_rock(ROCK_R_BIG, 0.014f + frand() * 0.010f);
 }
 
 static void split_rock(body_t *src)
@@ -92,7 +92,7 @@ static void split_rock(body_t *src)
     /* Big → two mediums. Medium → nothing (mediums are the final tier). */
     if (src->r != ROCK_R_BIG) return;
     int   newr = ROCK_R_MED;
-    float spd  = 0.040f;
+    float spd  = 0.028f;
     for (int k = 0; k < 2; k++) {
         for (int i = 0; i < MAX_ROCKS; i++) {
             if (s_rocks[i].alive) continue;
@@ -117,8 +117,8 @@ static void fire_bullet(void)
         float dy = -cosf(s_ship_a);
         s_bullets[i].x = s_ship_x + dx * SHIP_R;
         s_bullets[i].y = s_ship_y + dy * SHIP_R;
-        s_bullets[i].vx = dx * 0.25f + s_ship_vx * 0.5f;
-        s_bullets[i].vy = dy * 0.25f + s_ship_vy * 0.5f;
+        s_bullets[i].vx = dx * 0.15f + s_ship_vx * 0.5f;
+        s_bullets[i].vy = dy * 0.15f + s_ship_vy * 0.5f;
         s_bullets[i].ttl_ms = BULLET_TTL;
         return;
     }
@@ -205,7 +205,7 @@ static bool asteroids_update(const arcade_input_t *in)
     }
     /* Spawn fresh wave if cleared. */
     if (alive_rocks == 0) {
-        for (int i = 0; i < 4; i++) spawn_rock(ROCK_R_BIG, 0.025f + frand() * 0.020f);
+        for (int i = 0; i < 4; i++) spawn_rock(ROCK_R_BIG, 0.014f + frand() * 0.012f);
     }
 
     /* Bullet/rock collisions. */

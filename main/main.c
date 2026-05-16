@@ -29,9 +29,11 @@ extern const arcade_game_t game_maze;
 extern const arcade_game_t game_pong;
 extern const arcade_game_t game_breakout;
 extern const arcade_game_t game_asteroids;
+extern const arcade_game_t game_tetris;
 
 static const arcade_game_t *const s_games[] = {
     &game_snake,
+    &game_tetris,
     &game_maze,
     &game_pong,
     &game_breakout,
@@ -109,9 +111,9 @@ static void render_menu(void)
     gc9107_fill_rect(0, 19, LCD_WIDTH, 1, A_C_BORDER);
     arcade_draw_centered(6, "ARCADE", A_C_ACCENT, A_C_PANEL, 1);
 
-    /* Game list — 5 rows × ~16 px each */
-    int row_h = 18;
-    int top = 24;
+    /* Game list — fits up to ~7 rows below the title bar. */
+    int row_h = 17;
+    int top   = 22;
     for (int i = 0; i < GAME_COUNT; i++) {
         int y = top + i * row_h;
         bool is_sel = (i == s_selected);

@@ -10,6 +10,7 @@ idf_component_register(
         "game_pong.c"
         "game_breakout.c"
         "game_asteroids.c"
+        "game_tetris.c"
     INCLUDE_DIRS "."
     REQUIRES
         esp_driver_spi

@@ -35,9 +35,9 @@ static void reset_ball(int towards_player)
     s_ball_x  = LCD_WIDTH  / 2.0f - BALL_SZ / 2.0f;
     s_ball_y  = LCD_HEIGHT / 2.0f - BALL_SZ / 2.0f;
     int sign  = towards_player ? 1 : -1;
-    float vx  = (rand() % 30 - 15) * 0.04f;       /* −0.6 .. +0.6 px/ms */
+    float vx  = (rand() % 30 - 15) * 0.02f;       /* gentler initial drift */
     s_ball_vx = vx;
-    s_ball_vy = sign * 0.06f;                     /* px/ms */
+    s_ball_vy = sign * 0.030f;                    /* halved from 0.060 px/ms */
     s_serving      = true;
     s_serve_at_us  = esp_timer_get_time() + 700000;     /* 0.7 s delay */
 }
@@ -67,7 +67,7 @@ static bool pong_update(const arcade_input_t *in)
 
     /* AI: aim at the ball with a capped speed and a small lag for fairness. */
     int ai_target = (int)s_ball_x + BALL_SZ / 2 - PADDLE_W / 2;
-    float ai_speed = 0.07f;                       /* px/ms */
+    float ai_speed = 0.04f;                       /* tuned down to match slower ball */
     if (s_paddle_ai_x < ai_target) {
         s_paddle_ai_x += (int)(ai_speed * dt_ms);
         if (s_paddle_ai_x > ai_target) s_paddle_ai_x = ai_target;
@@ -96,7 +96,7 @@ static bool pong_update(const arcade_input_t *in)
             s_ball_y = PADDLE_Y_AI + PADDLE_H;
             s_ball_vy = -s_ball_vy;
             float rel = ((s_ball_x + BALL_SZ / 2.0f) - (s_paddle_ai_x + PADDLE_W / 2.0f)) / (PADDLE_W / 2.0f);
-            s_ball_vx += rel * 0.05f;
+            s_ball_vx += rel * 0.025f;
         }
         /* Player paddle collision (ball moving down). */
         if (s_ball_vy > 0 &&
@@ -107,13 +107,13 @@ static bool pong_update(const arcade_input_t *in)
             s_ball_y = PADDLE_Y_PL - BALL_SZ;
             s_ball_vy = -s_ball_vy;
             float rel = ((s_ball_x + BALL_SZ / 2.0f) - (s_paddle_pl_x + PADDLE_W / 2.0f)) / (PADDLE_W / 2.0f);
-            s_ball_vx += rel * 0.05f;
+            s_ball_vx += rel * 0.025f;
         }
-        /* Speed cap. */
-        if (s_ball_vx >  0.20f) s_ball_vx =  0.20f;
-        if (s_ball_vx < -0.20f) s_ball_vx = -0.20f;
-        if (s_ball_vy >  0.18f) s_ball_vy =  0.18f;
-        if (s_ball_vy < -0.18f) s_ball_vy = -0.18f;
+        /* Speed cap — halved. */
+        if (s_ball_vx >  0.10f) s_ball_vx =  0.10f;
+        if (s_ball_vx < -0.10f) s_ball_vx = -0.10f;
+        if (s_ball_vy >  0.09f) s_ball_vy =  0.09f;
+        if (s_ball_vy < -0.09f) s_ball_vy = -0.09f;
 
         /* Out of bounds — score and reserve. */
         if (s_ball_y + BALL_SZ < 0)             { s_score_pl++; reset_ball(1); }
